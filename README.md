@@ -7,6 +7,7 @@ This redesigns the drip system on the rooftop walkway. It uses the existing wate
 | 3D step-by-step build guide (Blender 4.2+) | [`blender/irrigation_guide.blend`](blender/irrigation_guide.blend) |
 | Script that generates the .blend (edit the schedule and re-run it) | [`blender/build_irrigation_scene.py`](blender/build_irrigation_scene.py) |
 | One rendered image per step | [`renders/step_0.png` … `step_9.png`](renders/) |
+| Walkthrough video of all steps (640×360, ~68 s) | [`renders/irrigation_walkthrough.mp4`](renders/irrigation_walkthrough.mp4) |
 | ESP32 controller firmware | [`firmware/rooftop_irrigation/rooftop_irrigation.ino`](firmware/rooftop_irrigation/rooftop_irrigation.ino) |
 
 ### Using the Blender file
