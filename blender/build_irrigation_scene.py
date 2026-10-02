@@ -1,14 +1,15 @@
 """
-Rooftop tyre-garden irrigation (budget build): step-by-step 3D guide for Blender (4.2+).
+Rooftop tyre-garden irrigation (low-cost college build, ~GBP 62): step-by-step 3D guide for Blender (4.2+).
 
 Builds the rooftop walkway (parapet wall, tiled roof, 9 tyre planters, water butt)
 and an animated, step-by-step install of a low-cost pumped drip system:
 
-    water butt -> 12 V brushless pump (float switch cuts it when the butt is low)
-    -> anti-siphon tee -> screen filter -> ONE 13 mm main pipe along the wall
-    -> at each tyre: 4 mm connector + on/off tap + micro-tube
+    water butt -> small 12 V brushless pump (tights over the intake as a filter)
+    -> 1 mm anti-siphon hole -> ONE 13 mm main pipe along the wall
+    -> at each tyre: 4 mm connector + micro-tube
     -> 1-3 ADJUSTABLE drippers per tyre (more drippers / more open = more water)
-    A 12 V programmable timer switches the pump; a 10 W solar panel keeps the battery charged.
+    A 12 V weekly timer switches the pump through the float switch (no relay);
+    a 5 W solar panel keeps a small 12 V battery charged.
 
 Usage
   * In Blender: open the Scripting workspace, open this file, press "Run Script".
@@ -34,11 +35,11 @@ from mathutils import Vector
 # it has and how far their caps are opened (checked with a jug, in ml per minute).
 # --------------------------------------------------------------------------
 TYRES = [
-    # name,               plant kind,   drippers, target ml/min (0 = tap off)
+    # name,               plant kind,   drippers, target ml/min (0 = caps closed)
     ("T1 Wildflowers",    "wildflower", 1,  60),
     ("T2 Thrift & grass", "grass",      1,  60),
     ("T3 Pansies",        "pansy",      2, 160),
-    ("T4 Empty / new",    "empty",      1,   0),
+    ("T4 Empty / new",    "empty",      1,   0),   # dripper caps closed
     ("T5 Lavender",       "lavender",   1,  30),
     ("T6 Geranium+nast.", "geranium2",  2, 100),
     ("T7 Geranium",       "geranium",   2, 100),
@@ -63,7 +64,8 @@ BOX_X, BOX_Z = 7.85, 0.88                          # enclosure centre on wall
 MAIN_Z = 0.62                                      # main pipe height on the wall
 MAIN_Y = 0.025
 MAIN_R = 0.008                                     # 13 mm pipe (~16 mm outside)
-TOP_Z = 1.20                                       # anti-siphon tee above the butt
+TOP_Z = 1.20                                       # pipe crest above the butt lid
+HOLE_Z = BUTT_H - 0.04                             # 1 mm anti-siphon hole, inside the butt
 DROP_X = 8.35                                      # where the main pipe comes down the wall
 END_X = TYRE_X[-1] - 0.40
 BENCH = Vector((13.0, 1.4, 0.80))                  # wiring bench
@@ -73,54 +75,54 @@ STEPS = [
     ("STEP 0  -  What you have now",
      ["9 tyre planters, a 100 L water butt at the far end and one shared drip line.",
       "Gravity alone gives under 0.1 bar - too weak to push water evenly to 9 tyres.",
-      "Plan: a small 12 V pump on a timer feeds ONE main pipe, and each tyre gets its",
-      "own number of adjustable drippers.  Remove the old line, KEEP the wall clips."],
+      "Plan (~GBP 62): a small 12 V pump on a timer feeds ONE main pipe, and each tyre",
+      "gets its own number of adjustable drippers.  KEEP the white wall clips."],
      120),
     ("STEP 1  -  Pump + float switch in the water butt",
-     ["Sit the 12 V brushless submersible pump flat on the butt floor.",
-      "Fix the float switch ~15 cm above the pump intake (cable tie to a weighted rod).",
-      "Float DOWN = butt nearly empty -> pump power is cut (no dry running).",
-      "Bring both cables out through a hole in the lid (grommet) - the pipe follows in step 3."],
+     ["Pull an old pair of tights over the pump intake (free filter), cable-tie it.",
+      "Sit the small 12 V brushless pump (3 m head, under 5 W) flat on the butt floor.",
+      "Fix the float switch ~15 cm above the intake. It is wired IN SERIES with the pump:",
+      "float down = butt nearly empty = pump off.  Cables out through a hole in the lid."],
      150),
-    ("STEP 2  -  Solar panel + timer box",
-     ["Bolt the 10 W panel to the coping on an angle bracket, facing south-ish.",
-      "Small IP65 box on the wall: 12 V 7 Ah battery, solar charge controller,",
-      "12 V programmable timer, 12 V car relay, 5 A fuse.  Cable glands on the BOTTOM.",
+    ("STEP 2  -  Small solar panel + timer box",
+     ["Fix the 5 W panel on the coping, tilted to face south-ish (bracket or cable ties).",
+      "Lidded plastic box on the wall: 12 V 2.3 Ah battery, solar charge controller,",
+      "12 V weekly timer, 3 A fuse.  Drill cable holes in the BOTTOM of the box only.",
       "Everything runs from the controller LOAD terminals (protects the battery)."],
      150),
     ("STEP 3  -  One 13 mm main pipe",
-     ["Pipe from the pump up over the butt rim. At the TOP fit a tee with a short 4 mm",
-      "bleed tube back into the butt: it lets air in so the butt can't siphon itself empty.",
-      "Screen filter on the way down, then along the wall in the clips (cable-tie it),",
-      "30 cm past the last tyre.  Fit an end stop."],
+     ["Pipe from the pump up over the butt rim.  Just under the lid, drill a 1 mm hole",
+      "in the pipe (a hot needle works): it squirts back into the butt while pumping and",
+      "lets air in when the pump stops, so the butt can't siphon itself empty.",
+      "Along the wall in the clips (cable ties), 30 cm past the last tyre, end stop."],
      170),
     ("STEP 4  -  A drop tube to every tyre",
-     ["At each tyre punch a hole in the SIDE of the main pipe (not underneath - grit),",
-      "push in a 4 mm barbed connector, then a 4 mm on/off tap, then 4/7 mm",
-      "micro-tube down the wall into the tyre.  The tap shuts off one tyre",
-      "(e.g. the empty one) without touching the rest."],
+     ["At each tyre make a hole in the SIDE of the main pipe (hot nail, bradawl or",
+      "3 mm drill - no punch tool needed), push in a 4 mm barbed connector, then run",
+      "4/7 mm micro-tube down the wall into the tyre.  No taps: to shut a tyre off",
+      "(e.g. the empty one) just screw its dripper caps fully closed."],
      150),
     ("STEP 5  -  Drippers: more drippers = more water",
      ["Each tyre gets 1, 2 or 3 ADJUSTABLE drippers on stakes, joined with 4 mm tees:",
       "Strawberries 3  -  Pansies 2  -  Geraniums 2  -  Wildflowers, Thrift,",
-      "Lavender, Succulent 1 each.  Empty tyre: fit 1, close its tap.",
+      "Lavender, Succulent 1 each.  Empty tyre: fit 1, caps closed.",
       "Push the stakes in either side of the plant, not against the tyre wall."],
      150),
-    ("STEP 6  -  Wiring (inside the box)",
-     ["Panel -> controller PV.  Battery -> controller BAT (5 A fuse on +).",
-      "LOAD + / -  ->  +12 V and GND rails.  Timer powered from the rails.",
-      "Timer COM <- +12 V.  Timer NO -> float switch -> relay coil 86;  85 -> GND.",
-      "Relay 30 <- +12 V, 87 -> pump +, pump - -> GND.  Diode across coil and pump."],
+    ("STEP 6  -  Wiring (5 connections, no relay)",
+     ["Panel -> controller PV.   Battery -> controller BAT (3 A fuse on +).",
+      "Controller LOAD + / -  ->  timer DC+ / DC-.",
+      "Timer COM <- LOAD +.   Timer NO -> float switch -> pump +.   Pump - -> LOAD -.",
+      "Only works because the pump draws under 0.4 A (float switch limit ~0.5 A)."],
      180),
     ("STEP 7  -  Set the timer, then set each tyre's water",
      ["Timer: ON 07:00, OFF 07:10, on Mon / Wed / Fri / Sun (add 19:00 in a heatwave).",
       "Press the timer's MANUAL button, hold a jug under one tyre's drippers for 1 min.",
       "Turn the caps until each tyre gives its ml/min on the tags (strawberries 300).",
-      "ml per minute x 10 = ml per watering.  Re-check the soil after a week."],
+      "Can't reach a target?  Set the timer to 15 min and aim for 2/3 of each target."],
      260),
     ("DONE  -  Weekly 2-minute check",
-     ["Weekly: glance at the butt level.  Monthly: rinse the filter and flick each",
-      "dripper cap open and shut to clear grit.  Winter: lift the pump, drain the",
+     ["Weekly: glance at the butt level.  Monthly: rinse the tights filter and flick",
+      "each dripper cap open and shut to clear grit.  Winter: lift the pump, drain the",
       "pipe, keep the battery indoors and charged.  Each watering uses ~8 L, so",
       "4 a week is ~33 L: a full 100 L butt lasts ~3 weeks without rain."],
      160),
@@ -565,10 +567,10 @@ def build_power(f):
     cable_m = mat("Cable black", (0.01, 0.01, 0.01), 0.5)
     tilt = math.radians(-35)
     objs = [
-        box("Solar panel 10W frame", (BOX_X, -0.12, WALL_H + 0.22), (0.36, 0.26, 0.02), frame_m, rot=(tilt, 0, 0)),
-        box("Solar panel 10W cells", (BOX_X, -0.12 + 0.004, WALL_H + 0.232), (0.34, 0.24, 0.01), cell_m, rot=(tilt, 0, 0)),
-        box("Panel bracket L", (BOX_X - 0.15, -0.12, WALL_H + 0.14), (0.02, 0.2, 0.14), frame_m),
-        box("Panel bracket R", (BOX_X + 0.15, -0.12, WALL_H + 0.14), (0.02, 0.2, 0.14), frame_m),
+        box("Solar panel 5W frame", (BOX_X, -0.12, WALL_H + 0.20), (0.26, 0.20, 0.02), frame_m, rot=(tilt, 0, 0)),
+        box("Solar panel 5W cells", (BOX_X, -0.12 + 0.004, WALL_H + 0.212), (0.24, 0.18, 0.01), cell_m, rot=(tilt, 0, 0)),
+        box("Panel bracket L", (BOX_X - 0.11, -0.12, WALL_H + 0.14), (0.02, 0.2, 0.14), frame_m),
+        box("Panel bracket R", (BOX_X + 0.11, -0.12, WALL_H + 0.14), (0.02, 0.2, 0.14), frame_m),
         tube("Panel cable", [(BOX_X + 0.12, -0.05, WALL_H + 0.12), (BOX_X + 0.12, 0.02, WALL_H + 0.09),
                              (BOX_X + 0.12, 0.02, BOX_Z + 0.13)], 0.004, cable_m, 0.03),
     ]
@@ -649,6 +651,7 @@ def build_pump(f):
     objs = [
         cyl("Pump", (px, py, 0.05), 0.045, 0.08, pump_m),
         cyl("Pump intake strainer", (px, py, 0.008), 0.05, 0.015, blue),
+        sphere("Tights over intake", (px, py, 0.045), 0.06, mat("Tights", (0.55, 0.42, 0.33), 0.9, 0, 0, 0.6), (1, 1, 0.9)),
         cyl("Pump outlet", (px + 0.04, py, 0.07), 0.009, 0.05, pump_m, rot=(0, math.pi / 2, 0)),
         cyl("Float rod", (px - 0.12, py + 0.05, 0.3), 0.005, 0.6, mat("Rod", (0.6, 0.6, 0.6), 0.3, 1.0)),
         cyl("Float switch", (px - 0.12, py + 0.05, 0.22), 0.018, 0.04, float_m),
@@ -662,31 +665,27 @@ def build_pump(f):
 
 def build_box(f):
     collection("02 Timer box")
-    grey = mat("Enclosure", (0.78, 0.79, 0.80), 0.35)
-    lidm = mat("Enclosure lid", (0.70, 0.75, 0.80), 0.1, 0.0, 0.0, 0.12)
+    plastic = mat("Plastic box", (0.85, 0.87, 0.88), 0.3, 0.0, 0.0, 0.5)
+    lidm = mat("Plastic box lid", (0.20, 0.45, 0.80), 0.3)
     batt = mat("Battery", (0.05, 0.05, 0.05), 0.5)
-    W, D, H = 0.26, 0.12, 0.22
+    W, D, H = 0.24, 0.12, 0.16
     y0 = D / 2 + 0.002
     objs = [
-        box("Enclosure back", (BOX_X, y0 - D / 2 + 0.005, BOX_Z), (W, 0.01, H), grey),
-        box("Enclosure L", (BOX_X - W / 2, y0, BOX_Z), (0.006, D, H), grey),
-        box("Enclosure R", (BOX_X + W / 2, y0, BOX_Z), (0.006, D, H), grey),
-        box("Enclosure top", (BOX_X, y0, BOX_Z + H / 2), (W, D, 0.006), grey),
-        box("Enclosure bottom", (BOX_X, y0, BOX_Z - H / 2), (W, D, 0.006), grey),
-        box("Enclosure clear lid", (BOX_X, y0 + D / 2, BOX_Z), (W, 0.006, H), lidm),
-        box("Battery 12V 7Ah", (BOX_X - 0.07, y0 - 0.01, BOX_Z - 0.05), (0.10, 0.065, 0.095), batt),
-        box("Charge controller", (BOX_X - 0.07, y0 - 0.03, BOX_Z + 0.06), (0.09, 0.03, 0.06), mat("Controller", (0.1, 0.25, 0.6))),
-        box("Timer", (BOX_X + 0.06, y0 - 0.025, BOX_Z + 0.05), (0.075, 0.04, 0.06), mat("Timer body", (0.92, 0.92, 0.9), 0.4)),
-        box("Timer LCD", (BOX_X + 0.06, y0 - 0.004, BOX_Z + 0.06), (0.05, 0.003, 0.022), mat("LCD", (0.25, 0.45, 0.3), 0.2, 0, 1.5)),
-        box("Relay", (BOX_X + 0.04, y0 - 0.03, BOX_Z - 0.06), (0.03, 0.03, 0.03), batt),
-        box("Fuse", (BOX_X + 0.09, y0 - 0.035, BOX_Z - 0.06), (0.03, 0.012, 0.015), mat("Fuse", (0.95, 0.6, 0.05), 0.4)),
+        box("Box back", (BOX_X, y0 - D / 2 + 0.003, BOX_Z), (W, 0.006, H), plastic),
+        box("Box L", (BOX_X - W / 2, y0, BOX_Z), (0.004, D, H), plastic),
+        box("Box R", (BOX_X + W / 2, y0, BOX_Z), (0.004, D, H), plastic),
+        box("Box bottom", (BOX_X, y0, BOX_Z - H / 2), (W, D, 0.004), plastic),
+        box("Box front", (BOX_X, y0 + D / 2, BOX_Z), (W, 0.004, H), plastic),
+        box("Box lid", (BOX_X, y0, BOX_Z + H / 2 + 0.006), (W + 0.012, D + 0.012, 0.012), lidm),
+        box("Battery 12V 2.3Ah", (BOX_X - 0.065, y0 - 0.01, BOX_Z - 0.03), (0.075, 0.035, 0.09), batt),
+        box("Charge controller", (BOX_X + 0.005, y0 - 0.03, BOX_Z + 0.02), (0.06, 0.025, 0.05), mat("Controller", (0.1, 0.25, 0.6))),
+        box("Timer", (BOX_X + 0.07, y0 - 0.025, BOX_Z + 0.02), (0.065, 0.035, 0.05), mat("Timer body", (0.92, 0.92, 0.9), 0.4)),
+        box("Timer LCD", (BOX_X + 0.07, y0 - 0.006, BOX_Z + 0.028), (0.045, 0.003, 0.018), mat("LCD", (0.25, 0.45, 0.3), 0.2, 0, 1.5)),
+        box("Fuse", (BOX_X + 0.03, y0 - 0.035, BOX_Z - 0.05), (0.03, 0.012, 0.015), mat("Fuse", (0.95, 0.6, 0.05), 0.4)),
     ]
-    for k in range(3):
-        objs.append(cyl(f"Cable gland {k}", (BOX_X - 0.07 + k * 0.07, y0, BOX_Z - H / 2 - 0.01), 0.01, 0.02, grey))
     for sx in (-1, 1):
-        for sz in (-1, 1):
-            objs.append(cyl(f"Wall screw {sx}{sz}", (BOX_X + sx * (W / 2 - 0.02), 0.012, BOX_Z + sz * (H / 2 - 0.02)),
-                            0.006, 0.004, mat("Steel", (0.7, 0.7, 0.7), 0.3, 1.0), rot=(math.pi / 2, 0, 0)))
+        objs.append(cyl(f"Wall screw {sx}", (BOX_X + sx * (W / 2 - 0.03), 0.008, BOX_Z + 0.04),
+                        0.006, 0.004, mat("Steel", (0.7, 0.7, 0.7), 0.3, 1.0), rot=(math.pi / 2, 0, 0)))
     g = group("G2 Box", objs, (BOX_X, y0, BOX_Z))
     pop_in(g, f)
 
@@ -712,14 +711,9 @@ def build_mainline(f0, f1):
     pipe.data.keyframe_insert("bevel_factor_end", frame=f1)
 
     grey = mat("Fitting grey", (0.55, 0.57, 0.58), 0.4)
-    filt = mat("Filter blue", (0.1, 0.3, 0.75), 0.3)
-    blk = mat("Tube black", (0.015, 0.015, 0.015), 0.4)
-    tx, ty = BUTT_X + 0.12, BUTT_Y
-    tee = [box("Anti-siphon tee", (tx, ty, TOP_Z), (0.035, 0.03, 0.035), grey),
-           tube("Bleed tube 4mm", [(tx, ty - 0.02, TOP_Z), (tx, ty - 0.05, TOP_Z - 0.05), (tx, ty - 0.05, 0.85)], 0.0035, blk, 0.02)]
-    pop_in(group("G3 Tee", tee, (tx, ty, TOP_Z)), f0 + 20, drop=0.2)
-    fz = (TOP_Z + MAIN_Z) / 2
-    pop_in(group("G3 Filter", [cyl("Screen filter", (DROP_X, 0.08, fz), 0.022, 0.09, filt)], (DROP_X, 0.08, fz)), f0 + 45, drop=0.2)
+    hole_m = mat("Hole marker", (0.1, 0.6, 1.0), 0.3, 0, 3.0)
+    hx, hy = BUTT_X + 0.12 - MAIN_R, BUTT_Y
+    pop_in(group("G3 Hole", [sphere("Anti-siphon hole (1 mm)", (hx, hy, HOLE_Z), 0.006, hole_m)], (hx, hy, HOLE_Z)), f0 + 25, drop=0.0)
     pop_in(group("G3 End stop", [cyl("End stop", (END_X - 0.01, MAIN_Y, MAIN_Z), 0.011, 0.03, grey, rot=(0, math.pi / 2, 0))],
                  (END_X, MAIN_Y, MAIN_Z)), f1, drop=0.2)
     # Cable ties onto the existing clips
@@ -742,17 +736,10 @@ def build_drops(f):
     collection("04 Drop tubes")
     blk = mat("Tube black", (0.015, 0.015, 0.015), 0.4)
     connector = mat("Barbed connector", (0.1, 0.1, 0.1), 0.4)
-    tap_m = mat("Tap body", (0.1, 0.1, 0.1), 0.4)
-    lever_on = mat("Tap lever blue", (0.1, 0.35, 0.9), 0.4)
-    lever_off = mat("Tap lever red", (0.85, 0.1, 0.05), 0.4)
-    for i, (name, kind, n, mlpm) in enumerate(TYRES):
+    for i in range(len(TYRES)):
         x = TYRE_X[i]
         objs = [
             cyl(f"T{i + 1} connector", (x, MAIN_Y + 0.01, MAIN_Z), 0.004, 0.02, connector, rot=(math.pi / 2, 0, 0)),
-            box(f"T{i + 1} tap", (x, 0.045, 0.53), (0.012, 0.012, 0.03), tap_m),
-            # Lever across the tube = closed (red), along it = open (blue)
-            box(f"T{i + 1} tap lever", (x, 0.055, 0.53), (0.03, 0.006, 0.006) if mlpm == 0 else (0.006, 0.006, 0.03),
-                lever_off if mlpm == 0 else lever_on),
             tube(f"T{i + 1} drop tube", drop_path(x), 0.0035, blk, 0.03),
         ]
         pop_in(group(f"G4 Drop T{i + 1}", objs, (x, 0.05, 0.45)), f + i * 8, drop=0.25)
@@ -825,46 +812,36 @@ def build_bench(f):
     def note(body, x, y, size=0.026):
         objs.append(text(f"Note {body[:12]}", body, P(x, y, 0.001), size, ink))
 
-    comp_box("B Solar panel", -0.62, 0.38, 0.22, 0.14, 0.01, comp["panel"], "10 W PANEL")
-    comp_box("B Controller", -0.62, 0.10, 0.18, 0.12, 0.03, comp["ctrl"], "SOLAR CHARGE\nCONTROLLER")
-    comp_box("B Battery", -0.62, -0.25, 0.20, 0.12, 0.08, comp["batt"], "12 V 7 Ah SLA")
-    comp_box("B Fuse", -0.40, -0.12, 0.05, 0.03, 0.02, comp["fuse"], "5 A FUSE", 0.022)
-    comp_box("B Timer", -0.08, 0.02, 0.22, 0.14, 0.03, comp["timer"], "12 V PROGRAMMABLE TIMER")
-    objs.append(box("B Timer LCD", P(-0.08, 0.04, 0.032), (0.12, 0.05, 0.004), mat("LCD", (0.25, 0.45, 0.3), 0.2, 0, 1.5)))
-    comp_box("B Relay", 0.32, 0.02, 0.08, 0.08, 0.06, comp["relay"], "12 V RELAY", 0.026)
-    comp_box("B Float", 0.12, -0.32, 0.06, 0.06, 0.03, comp["light"], "FLOAT SWITCH\n(in the butt)", 0.024)
-    comp_box("B Pump", 0.52, -0.32, 0.09, 0.09, 0.06, comp["relay"], "PUMP\n(in the butt)", 0.024)
-    # Rails
+    comp_box("B Solar panel", -0.62, 0.38, 0.18, 0.12, 0.01, comp["panel"], "5 W PANEL")
+    comp_box("B Controller", -0.62, 0.10, 0.16, 0.11, 0.03, comp["ctrl"], "SOLAR CHARGE\nCONTROLLER")
+    comp_box("B Battery", -0.62, -0.25, 0.14, 0.09, 0.07, comp["batt"], "12 V 2.3 Ah SLA")
+    comp_box("B Fuse", -0.40, -0.12, 0.05, 0.03, 0.02, comp["fuse"], "3 A FUSE", 0.022)
+    comp_box("B Timer", -0.05, 0.05, 0.22, 0.14, 0.03, comp["timer"], "12 V WEEKLY TIMER")
+    objs.append(box("B Timer LCD", P(-0.05, 0.07, 0.032), (0.12, 0.05, 0.004), mat("LCD", (0.25, 0.45, 0.3), 0.2, 0, 1.5)))
+    comp_box("B Float", 0.30, -0.30, 0.06, 0.06, 0.03, comp["light"], "FLOAT SWITCH\n(in the butt)", 0.024)
+    comp_box("B Pump", 0.58, -0.05, 0.09, 0.09, 0.06, comp["relay"], "PUMP < 0.4 A\n(in the butt)", 0.024)
+    # LOAD + / - rails
     wire("+12V rail", [(-0.40, 0.30), (0.72, 0.30)], "red")
     wire("GND rail", [(-0.40, 0.25), (0.72, 0.25)], "blk")
-    note("+12 V rail  /  GND rail", -0.33, 0.375)
+    note("LOAD +  /  LOAD -", -0.33, 0.375)
     # Solar + battery
     wire("Panel +", [(-0.58, 0.31), (-0.58, 0.16)], "red")
     wire("Panel -", [(-0.66, 0.31), (-0.66, 0.16)], "blk")
-    wire("Batt + via fuse", [(-0.56, -0.19), (-0.40, -0.12), (-0.40, 0.0), (-0.58, 0.04)], "red")
-    wire("Batt -", [(-0.68, -0.19), (-0.68, 0.04)], "blk")
+    wire("Batt + via fuse", [(-0.57, -0.21), (-0.40, -0.12), (-0.40, 0.0), (-0.58, 0.05)], "red")
+    wire("Batt -", [(-0.67, -0.21), (-0.67, 0.05)], "blk")
     wire("LOAD + to rail", [(-0.55, 0.16), (-0.48, 0.22), (-0.40, 0.30)], "red")
     wire("LOAD - to rail", [(-0.53, 0.14), (-0.45, 0.20), (-0.40, 0.25)], "blk")
     # Timer power + contacts
-    wire("Timer DC+", [(-0.16, 0.30), (-0.16, 0.09)], "red")
-    wire("Timer DC-", [(-0.12, 0.25), (-0.12, 0.09)], "blk")
-    wire("Timer COM", [(-0.02, 0.30), (-0.02, 0.09)], "red")
-    note("DC+  DC-       COM", -0.19, 0.125, 0.018)
-    note("NO", -0.01, -0.06, 0.018)
-    wire("Timer NO to float", [(0.0, -0.05), (0.0, -0.20), (0.10, -0.29)], "org")
-    wire("Float to relay 86", [(0.14, -0.29), (0.29, -0.12), (0.29, -0.02)], "blu")
-    wire("Relay 85 to GND", [(0.35, 0.06), (0.35, 0.25)], "blk")
-    wire("Relay 30 from +12", [(0.29, 0.06), (0.29, 0.30)], "red")
-    note("30  85", 0.27, 0.115, 0.018)
-    note("86  87", 0.27, -0.035, 0.018)
-    wire("Relay 87 to pump +", [(0.35, -0.02), (0.35, -0.12), (0.49, -0.28)], "org")
-    wire("Pump - to GND", [(0.55, -0.28), (0.66, -0.20), (0.66, 0.25)], "blk")
-    # Flyback diodes
-    for name, x, y in (("coil", 0.40, 0.0), ("pump", 0.62, -0.36)):
-        objs.append(cyl(f"Diode {name}", P(x, y, 0.008), 0.004, 0.024, comp["batt"], rot=(math.pi / 2, 0, 0)))
-        objs.append(cyl(f"Diode band {name}", P(x, y + 0.009, 0.008), 0.0045, 0.004, comp["light"], rot=(math.pi / 2, 0, 0)))
-    note("1N4007 diode across the relay coil\nand across the pump, band to +", 0.10, 0.50, 0.024)
-    note("ORANGE = switched +12 V   BLUE = through float", -0.76, -0.42, 0.024)
+    wire("Timer DC+", [(-0.13, 0.30), (-0.13, 0.12)], "red")
+    wire("Timer DC-", [(-0.09, 0.25), (-0.09, 0.12)], "blk")
+    wire("Timer COM", [(0.01, 0.30), (0.01, 0.12)], "red")
+    note("DC+  DC-       COM", -0.16, 0.155, 0.018)
+    note("NO", 0.04, -0.03, 0.018)
+    wire("Timer NO to float", [(0.03, -0.02), (0.03, -0.30), (0.27, -0.30)], "org")
+    wire("Float to pump +", [(0.33, -0.30), (0.45, -0.30), (0.555, -0.10)], "blu")
+    wire("Pump - to GND", [(0.605, 0.00), (0.66, 0.10), (0.66, 0.25)], "blk")
+    note("Float switch is in series with the pump.\nNo relay: OK because the pump draws\nunder 0.4 A (float limit ~0.5 A).", 0.10, 0.52, 0.024)
+    note("ORANGE = timer output   BLUE = through float", -0.76, -0.42, 0.024)
     g = group("G6 Bench", objs, (B.x, B.y, B.z))
     pop_in(g, f, drop=0.5, dur=24)
 
@@ -878,7 +855,7 @@ def build_tags(f):
     title_m = emit_mat("Tag title", (1.0, 0.82, 0.2), 2.5)
     for i, (name, kind, n, mlpm) in enumerate(TYRES):
         if mlpm == 0:
-            sched = f"{n} dripper fitted\ntap OFF until planted"
+            sched = f"{n} dripper fitted\ncaps closed until planted"
         else:
             sched = f"{n} dripper{'s' if n > 1 else ''} - {mlpm} ml/min\n= {litres_per_watering(mlpm):.2f} L per watering"
         root = bpy.data.objects.new(f"Tag {name}", None)
@@ -906,15 +883,14 @@ def part_labels():
     bg = emit_mat("Part label bg", (0.0, 0.0, 0.0), 1.0, alpha=0.9)
     # (step, text, anchor, size factor). Text runs to the right of the anchor on screen.
     labels = [
-        (S_PUMP, "12 V brushless submersible pump\n(3-5 m head) on the butt floor", (BUTT_X - 0.25, BUTT_Y + 0.25, 0.16), 1.5),
+        (S_PUMP, "12 V brushless pump, 3 m head, under 5 W\nold tights over the intake = filter", (BUTT_X - 0.25, BUTT_Y + 0.25, 0.16), 1.5),
         (S_PUMP, "Float switch 15 cm above intake", (BUTT_X - 0.25, BUTT_Y + 0.25, 0.46), 1.5),
-        (S_PUMP, "13 mm pipe + cables out through lid", (BUTT_X - 0.25, BUTT_Y + 0.25, 1.18), 1.5),
-        (S_POWER, "10 W 12 V solar panel on bracket", (BOX_X + 0.55, 0.20, WALL_H + 0.50), 2.0),
-        (S_POWER, "IP65 box: battery, solar controller,\n12 V timer, relay, 5 A fuse", (BOX_X + 0.50, 0.30, BOX_Z + 0.12), 1.6),
-        (S_MAIN, "Anti-siphon tee: 4 mm bleed\ntube back into the butt", (BUTT_X - 0.02, BUTT_Y + 0.2, TOP_Z + 0.10), 1.5),
-        (S_MAIN, "Screen filter", (DROP_X - 0.05, 0.2, 0.98), 1.5),
+        (S_PUMP, "Cables out through the lid", (BUTT_X - 0.25, BUTT_Y + 0.25, 1.18), 1.5),
+        (S_POWER, "5 W 12 V solar panel", (BOX_X + 0.45, 0.20, WALL_H + 0.45), 2.0),
+        (S_POWER, "Lidded plastic box: 2.3 Ah battery,\nsolar controller, 12 V timer, 3 A fuse", (BOX_X + 0.50, 0.30, BOX_Z + 0.12), 1.6),
+        (S_MAIN, "1 mm hole just under the lid:\nstops the butt siphoning out", (BUTT_X - 0.02, BUTT_Y + 0.2, TOP_Z + 0.10), 1.5),
         (S_MAIN, "13 mm main pipe, cable-tied\nin the wall clips", (6.6, 0.25, 0.92), 1.8),
-        (S_DROPS, "4 mm connector + on/off tap", (TYRE_X[2] + 0.30, 0.25, 0.72), 1.1),
+        (S_DROPS, "4 mm barbed connector", (TYRE_X[2] + 0.30, 0.25, 0.72), 1.1),
         (S_DROPS, "4/7 mm micro-tube into the tyre", (TYRE_X[2] + 0.30, 0.30, 0.42), 1.1),
         (S_DRIP, "3 adjustable drippers\nfor the strawberries", (TYRE_X[7] + 0.33, TYRE_Y + 0.15, 0.55), 1.1),
     ]

@@ -1,6 +1,6 @@
 # Upgrade option: a separate schedule for every tyre (≈ £185)
 
-> **This is not the recommended build.** The budget build in the [main README](../README.md) (≈ £120) waters all tyres together and varies the *amount* per plant. Use this version only if you later want each tyre on its **own interval** (for example, strawberries daily and lavender every 4 days). It reuses the budget build's pump, float switch, solar power and drippers. It adds 9 valves, an ESP32 controller and separate tubes.
+> **This is not the recommended build.** The budget build in the [main README](../README.md) (≈ £62) waters all tyres together and varies the *amount* per plant. Use this version only if you later want each tyre on its **own interval** (for example, strawberries daily and lavender every 4 days). It reuses the water butt, float switch and drippers. It needs a bigger pump and more solar power, and adds 9 valves, an ESP32 controller and separate tubes.
 
 | What | Where |
 |---|---|
